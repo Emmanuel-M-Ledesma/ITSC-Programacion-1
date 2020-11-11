@@ -9,13 +9,15 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Xml.Linq;
+using BackEnd;
 
 namespace carga_y_venta_de_producto
 {
     public partial class frmStock : Form
     {
         #region Propiedades
-        Carga cargadatos = new Carga();
+        Cargar_y_guardar Persistencia = new Cargar_y_guardar();
+        Sumador Sumar = new Sumador();
         DataTable Stock = new DataTable();
         frmMain DGVcarga = new frmMain();
         int posicion;
@@ -97,22 +99,22 @@ namespace carga_y_venta_de_producto
             else
             {
                 
-                cargadatos.Cantidad = System.Convert.ToDecimal(txtCantidad.Text);
-                cargadatos.PrecCompra = System.Convert.ToDecimal(txtPCompra.Text);
+                Sumar.Cantidad = System.Convert.ToDecimal(txtCantidad.Text);
+                Sumar.PrecCompra = System.Convert.ToDecimal(txtPCompra.Text);
                
                
                 Ganancia();
-                cargadatos.GananciaStock();
+                Sumar.GananciaStock();
 
-                cargadatos.TotalStock();
+                Sumar.TotalStock();
                 Stock.Rows.Add();
                 Stock.Rows[Stock.Rows.Count - 1]["ID"] = txtID.Text;
                 Stock.Rows[Stock.Rows.Count - 1]["Producto"] = txtProducto.Text;
                 Stock.Rows[Stock.Rows.Count - 1]["Cantidad"] = System.Convert.ToDecimal(txtCantidad.Text);
                 Stock.Rows[Stock.Rows.Count - 1]["Precio de compra"] = System.Convert.ToDecimal(txtPCompra.Text);
-                Stock.Rows[Stock.Rows.Count - 1]["Total"] = cargadatos.Total;
+                Stock.Rows[Stock.Rows.Count - 1]["Total"] = Sumar.Total;
                 Stock.Rows[Stock.Rows.Count - 1]["Porcentaje de ganancia"] = System.Convert.ToString(txtPVenta.Text);
-                Stock.Rows[Stock.Rows.Count - 1]["Ganancia total"] = cargadatos.Ganancia;
+                Stock.Rows[Stock.Rows.Count - 1]["Ganancia total"] = Sumar.Ganancia;
                 LimpiarControles();
             }
             GuardadoAutomatico();
@@ -162,19 +164,19 @@ namespace carga_y_venta_de_producto
             else
             {
                
-                cargadatos.Cantidad = System.Convert.ToDecimal(txtCantidad.Text);
-                cargadatos.PrecCompra = System.Convert.ToDecimal(txtPCompra.Text);
+                Sumar.Cantidad = System.Convert.ToDecimal(txtCantidad.Text);
+                Sumar.PrecCompra = System.Convert.ToDecimal(txtPCompra.Text);
                 Ganancia();
-                cargadatos.GananciaStock();
-                cargadatos.TotalStock();
+                Sumar.GananciaStock();
+                Sumar.TotalStock();
 
                 DGV["ID", posicion].Value = txtID.Text;
                 DGV["Producto", posicion].Value = txtProducto.Text;
                 DGV["Cantidad", posicion].Value = System.Convert.ToDecimal(txtCantidad.Text);
                 DGV["Precio de compra", posicion].Value = System.Convert.ToDecimal(txtPCompra.Text);
                 DGV["Porcentaje de ganancia", posicion].Value = System.Convert.ToString(txtPVenta.Text);
-                DGV["Total", posicion].Value = cargadatos.Total;
-                DGV["Ganancia total", posicion].Value = cargadatos.Ganancia;
+                DGV["Total", posicion].Value = Sumar.Total;
+                DGV["Ganancia total", posicion].Value = Sumar.Ganancia;
                 LimpiarControles();
                 btCargaproducto.Enabled = true;
                 btModificar.Enabled = false;
@@ -215,7 +217,7 @@ namespace carga_y_venta_de_producto
        
         private void GuardadoAutomatico()
         {
-            if (cargadatos.URL != null)
+            if (Sumar.URL != null)
             {
                 Stock.WriteXml(@"lista.xml");
             }
@@ -236,43 +238,43 @@ namespace carga_y_venta_de_producto
         {
             if (txtPVenta.Text == "10%")
             {
-                cargadatos.PrecVenta = (10);
+                Sumar.PrecVenta = (10);
             }
             if (txtPVenta.Text == "20%")
             {
-                cargadatos.PrecVenta = (20);
+                Sumar.PrecVenta = (20);
             }
             if (txtPVenta.Text == "30%")
             {
-                cargadatos.PrecVenta = (30);
+                Sumar.PrecVenta = (30);
             }
             if (txtPVenta.Text == "40%")
             {
-                cargadatos.PrecVenta = (40);
+                Sumar.PrecVenta = (40);
             }
             if (txtPVenta.Text == "50%")
             {
-                cargadatos.PrecVenta = (50);
+                Sumar.PrecVenta = (50);
             }
             if (txtPVenta.Text == "60%")
             {
-                cargadatos.PrecVenta = (60);
+                Sumar.PrecVenta = (60);
             }
             if (txtPVenta.Text == "70%")
             {
-                cargadatos.PrecVenta = (70);
+                Sumar.PrecVenta = (70);
             }
             if (txtPVenta.Text == "80%")
             {
-                cargadatos.PrecVenta = (80);
+                Sumar.PrecVenta = (80);
             }
             if (txtPVenta.Text == "90%")
             {
-                cargadatos.PrecVenta = (90);
+                Sumar.PrecVenta = (90);
             }
             if (txtPVenta.Text == "100%")
             {
-                cargadatos.PrecVenta = (100);
+                Sumar.PrecVenta = (100);
             }
         }
 

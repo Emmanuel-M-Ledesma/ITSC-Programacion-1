@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
+using BackEnd;
 using System.Diagnostics.Tracing;
 
 namespace carga_y_venta_de_producto
@@ -15,7 +16,8 @@ namespace carga_y_venta_de_producto
     public partial class frmMain : Form
     {
         #region Propiedades
-        Carga cargadatos = new Carga();
+
+        Cargar_y_guardar Persistencia = new Cargar_y_guardar();
 
        
 
@@ -36,10 +38,12 @@ namespace carga_y_venta_de_producto
         private void btRefresh_Click(object sender, EventArgs e)
         {
             
-            cargadatos.cargartxt();
-            lblGO.Text = "$ " + cargadatos.residual;
-            cargadatos.CargarContador();
-            lblVR.Text = cargadatos.residual1;
+            Persistencia.cargartxt();
+            lblGO.Text = "$ " + Persistencia.residual;
+            Persistencia.GananciaObt();
+            Persistencia.CargarContador();
+            lblVR.Text = Persistencia.residual1;
+
         }
         private void btStock_Click(object sender, EventArgs e)
         {

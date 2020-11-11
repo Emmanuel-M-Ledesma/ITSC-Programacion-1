@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Runtime.Remoting.Messaging;
 using System.IO;
+using BackEnd;
 
 namespace carga_y_venta_de_producto
 {
@@ -21,7 +22,8 @@ namespace carga_y_venta_de_producto
 
         DataTable venta = new DataTable();
         DataTable final = new DataTable();
-        Carga cargadatos = new Carga();
+        Sumador Sumar = new Sumador();
+        Cargar_y_guardar Persistencia = new Cargar_y_guardar();
         frmMain formulario = new frmMain();
         SaveFileDialog guardar = new SaveFileDialog();
 
@@ -112,20 +114,21 @@ namespace carga_y_venta_de_producto
                 resta = System.Convert.ToDecimal(DGVstock["Cantidad", posicion].Value.ToString());
                 if (resta >= System.Convert.ToDecimal(txtCantidad.Text))
                 {
-                    cargadatos.PrecCompra = Convert.ToDecimal(PrecCompra);
-                    cargadatos.Cantidad = System.Convert.ToDecimal(txtCantidad.Text);
+                    Sumar.PrecCompra = Convert.ToDecimal(PrecCompra);
+                    Sumar.Cantidad = System.Convert.ToDecimal(txtCantidad.Text);
                     Total();
                     final.Rows.Add();
                     final.Rows[final.Rows.Count - 1]["ID"] = System.Convert.ToString(txtID.Text);
                     final.Rows[final.Rows.Count - 1]["Producto"] = System.Convert.ToString(txtProdVenta.Text);
                     final.Rows[final.Rows.Count - 1]["Cantidad"] = System.Convert.ToString(txtCantidad.Text);
-                    final.Rows[final.Rows.Count - 1]["Total"] = System.Convert.ToString(cargadatos.PrecVenta);
-                    DGVstock["Cantidad", posicion].Value = resta - cargadatos.Cantidad;
+                    final.Rows[final.Rows.Count - 1]["Total"] = System.Convert.ToString(Sumar.PrecVenta);
+                    DGVstock["Cantidad", posicion].Value = resta - Sumar.Cantidad;
                     TotalFinal();
                     LimpiarControles();
-                    
-                    cargadatos.GananciaObt();
-                    cargadatos.Guardartxt();
+                    //todo: cambiar a backend
+                    Arreglo();
+                    Persistencia.GananciaObt();
+                    Persistencia.Guardartxt();
                     GuardadoAutomatico();
                 }
                 else
@@ -145,8 +148,8 @@ namespace carga_y_venta_de_producto
             //aqui se habilitan botones y se llaman algunos metodos para hacer calculos 
 
             HabilitarBt();
-            cargadatos.cargartxt();
-            cargadatos.CargarContador();
+            Persistencia.cargartxt();
+            Persistencia.CargarContador();
             
             //Inicializacion de los datagridview y carga de xml 
             if (Finalizar == false)
@@ -215,7 +218,7 @@ namespace carga_y_venta_de_producto
             DGVventa.Enabled = false;
 
             
-            cargadatos.ContadorVenta();
+            Persistencia.ContadorVenta();
             iniciar = false;
             
 
@@ -308,7 +311,7 @@ namespace carga_y_venta_de_producto
 
         private void Total()
         {
-            cargadatos.TotalIndividual();
+            Sumar.TotalIndividual();
         }
         private void LimpiarControles()
         {
@@ -320,62 +323,67 @@ namespace carga_y_venta_de_producto
         }
 
         
-
+        private void Arreglo()
+        {
+            Persistencia.PrecCompra = Sumar.PrecCompra;
+            Persistencia.Cantidad = Sumar.Cantidad;
+            Persistencia.Ganancia = Sumar.Ganancia;
+        }
 
         private void Ganancia()
         {
             if (ganancia == "10%")
             {
-                cargadatos.Ganancia = 10;
+                Sumar.Ganancia = 10;
             }
             if (ganancia == "20%")
             {
-                cargadatos.Ganancia = 20;
+                Sumar.Ganancia = 20;
             }
             if (ganancia == "30%")
             {
-                cargadatos.Ganancia = 30;
+                Sumar.Ganancia = 30;
             }
             if (ganancia == "40%")
             {
-                cargadatos.Ganancia = 40;
+                Sumar.Ganancia = 40;
             }
             if (ganancia == "50%")
             {
-                cargadatos.Ganancia = 50;
+                Sumar.Ganancia = 50;
             }
             if (ganancia == "60%")
             {
-                cargadatos.Ganancia = 60;
+                Sumar.Ganancia = 60;
             }
             if (ganancia == "70%")
             {
-                cargadatos.Ganancia = 70;
+                Sumar.Ganancia = 70;
             }
             if (ganancia == "80%")
             {
-                cargadatos.Ganancia = 80;
+                Sumar.Ganancia = 80;
             }
             if (ganancia == "90%")
             {
-                cargadatos.Ganancia = 90;
+                Sumar.Ganancia = 90;
             }
             if (ganancia == "100%")
             {
-                cargadatos.Ganancia = 100;
+                Sumar.Ganancia = 100;
             }
         }
 
         private void TotalFinal()
         {
-            TotalPV = cargadatos.PrecVenta + TotalPV;
+            TotalPV = Sumar.PrecVenta + TotalPV;
 
             txtTotalVenta.Text = System.Convert.ToString(TotalPV);
             System.Convert.ToDecimal(TotalPV);
-            cargadatos.Total = TotalPV;
-            cargadatos.IvaBruto();
-            txtBruto.Text = System.Convert.ToString(cargadatos.Bruto);
-            txtIva.Text = System.Convert.ToString(cargadatos.IVA);
+            Sumar.Total = TotalPV;
+            Sumar.IvaBruto();
+            txtBruto.Text = System.Convert.ToString(Sumar.Bruto);
+            txtIva.Text = System.Convert.ToString(Sumar.IVA);
 
         }
 
