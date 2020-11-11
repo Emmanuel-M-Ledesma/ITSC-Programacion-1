@@ -45,6 +45,7 @@ namespace carga_y_venta_de_producto
         #region Eventos
         private void btNuevo_Click(object sender, EventArgs e)
         {
+
             Stock.Rows.Clear();
             btCargarStock.Enabled = true;
             btGuardar.Enabled = true;
@@ -65,17 +66,13 @@ namespace carga_y_venta_de_producto
                 
 
             }
-            //if (cargar.FileName != "")
-            //{
-            //    Stock.ReadXml(@"lista.xml");
-            //}
             
             btNuevo.Enabled = false;
         }
 
         private void btGuardar_Click(object sender, EventArgs e)
         {
-            
+            //Aqui se guarda el xml del stock principal
             Stock.WriteXml(@"lista.xml");
             
             btNuevo.Enabled = true;
@@ -87,23 +84,19 @@ namespace carga_y_venta_de_producto
         {
             Stock.Rows.Clear();
             Stock.ReadXml(@"lista.xml");
-            //if (cargar.ShowDialog() == DialogResult.OK)
-            //{
-            //    Stock.ReadXml(cargar.FileName);
-            //    DGV.DataSource = Stock;
-            //}
+            
         }
         private void btCargaproducto_Click(object sender, EventArgs e)
         {
-            
+            //Boton para agregar productos
 
-            if (txtCantidad.Text == "" || txtPCompra.Text == "")
+            if (txtCantidad.Text == "" || txtPCompra.Text == "" || txtPVenta.Text == "")
             {
                 MessageBox.Show("Debe completar los campos de cantidad y precios con caracteres numericos", "Error en el formulario");
             }
             else
             {
-                string preciodecompra;
+                
                 cargadatos.Cantidad = System.Convert.ToDecimal(txtCantidad.Text);
                 cargadatos.PrecCompra = System.Convert.ToDecimal(txtPCompra.Text);
                
@@ -139,11 +132,13 @@ namespace carga_y_venta_de_producto
         }
         private void button2_Click(object sender, EventArgs e)
         {
+            //Boton para cerrar el form de stock
             this.Close();
            
         }
         private void DGV_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            //Evento Cell click del datagridview de stock(se pasan los campos al textbox) 
 
             posicion = DGV.CurrentRow.Index;
             txtProducto.Text = DGV["Producto", posicion].Value.ToString();
@@ -158,6 +153,8 @@ namespace carga_y_venta_de_producto
         }
         private void btModificar_Click(object sender, EventArgs e)
         {
+            // Evento en el que se modificanlos datos del datagridview luego del evento cellclick
+
             if (txtCantidad.Text == "" || txtID.Text == "")
             {
                 MessageBox.Show("No se puede modificar una celda vacia", "Error al modificar");
@@ -187,6 +184,8 @@ namespace carga_y_venta_de_producto
         }
         private void txtCantidad_KeyPress_1(object sender, KeyPressEventArgs e)
         {
+            //Control para que el textbox de cantidad solo acepte numeros
+
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
                 e.Handled = true;
@@ -194,9 +193,11 @@ namespace carga_y_venta_de_producto
 
 
         }
-        //Control para que el textbox no acepte letras
+        
         private void txtPCompra_KeyPress(object sender, KeyPressEventArgs e)
         {
+            //Control para que el textbox acepte decimal (al momento acepta, pero se pueden poner varias comas y causa error)
+
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ','))
             {
                 e.Handled = true;
@@ -277,22 +278,14 @@ namespace carga_y_venta_de_producto
 
         
 
-        private void error()
-        {
-            DGV["ID", posicion].Value.ToString();
-            DGV["Producto", posicion].Value.ToString();
-            DGV["Cantidad", posicion].Value.ToString();
-            DGV["Precio de compra", posicion].Value.ToString();
-            DGV["Porcentaje de ganancia", posicion].Value.ToString();
-        }
-
-
-
-
-
-
-
-
+        //private void error()
+        //{
+        //    DGV["ID", posicion].Value.ToString();
+        //    DGV["Producto", posicion].Value.ToString();
+        //    DGV["Cantidad", posicion].Value.ToString();
+        //    DGV["Precio de compra", posicion].Value.ToString();
+        //    DGV["Porcentaje de ganancia", posicion].Value.ToString();
+        //}
         #endregion
 
         

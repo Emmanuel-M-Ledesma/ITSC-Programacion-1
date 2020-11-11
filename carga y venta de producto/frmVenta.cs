@@ -48,6 +48,8 @@ namespace carga_y_venta_de_producto
         #region Eventos
         private void btSalirVenta_Click(object sender, EventArgs e)
         {
+            //Evento click de boton salir para cerar el form
+
             if (btFinalizar.Enabled == true)
             {
                 MessageBox.Show("Debe finalizar la venta antes de salir", "Advertencia");
@@ -63,6 +65,8 @@ namespace carga_y_venta_de_producto
         //Evento click del datagirdview de stock 
         private void DGVstock_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            // evento cellclick del datagridview de stock, tambien controla si hay o no una venta en curso
+
             if (Finalizar == true && iniciar == false)
             {
                 MessageBox.Show("Debe iniciar una venta para seleccionar productos", "Error");
@@ -97,6 +101,8 @@ namespace carga_y_venta_de_producto
 
         private void btCargaproducto_Click(object sender, EventArgs e)
         {
+            //evento click de boton de carga de producto
+
             if (txtCantidad.Text == "")
             {
                 MessageBox.Show("Debe agregar cantidad", "Error de cantidad");
@@ -136,9 +142,12 @@ namespace carga_y_venta_de_producto
         }
         private void btNuevoVenta_Click(object sender, EventArgs e)
         {
+            //aqui se habilitan botones y se llaman algunos metodos para hacer calculos 
+
             HabilitarBt();
             cargadatos.cargartxt();
             cargadatos.CargarContador();
+            
             //Inicializacion de los datagridview y carga de xml 
             if (Finalizar == false)
             {
@@ -216,6 +225,8 @@ namespace carga_y_venta_de_producto
         }
         private void txtBuscarVenta_TextChanged(object sender, EventArgs e)
         {
+            //Evento de cambio en el texto, realiza una busqueda entre los productos del datagridview de error
+
             BindingSource buscar = new BindingSource();
             buscar.DataSource = DGVstock.DataSource;
             buscar.Filter = "Producto like '%" + txtBuscarVenta.Text + "%'";
@@ -226,6 +237,8 @@ namespace carga_y_venta_de_producto
         #region Metodos
         public void GenerarTicket()
         {
+            //metodo para crear el ticket de venta y establecer formato del archivo a guardar
+
             guardar.FileName = "Ticket";
             guardar.DefaultExt = ".txt";
             guardar.Filter = "Text documents (.txt)|*.txt";
@@ -262,6 +275,8 @@ namespace carga_y_venta_de_producto
         }
         private void Comparar()
         {
+            //metodo para comparar variables de cantidad en caso de que se quieran sacar productos
+
             comp1 = System.Convert.ToDecimal(DGVventa["Cantidad", posicion].Value.ToString());
             comp2 = System.Convert.ToDecimal(txtCantidad.Text);
 
@@ -283,11 +298,9 @@ namespace carga_y_venta_de_producto
 
         private void txtCantidad_KeyPress(object sender, KeyPressEventArgs e)
         {
+            //metodo para que el text box solo acepte numeros
+
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
-            {
-                e.Handled = true;
-            }
-            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
             {
                 e.Handled = true;
             }
