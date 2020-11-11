@@ -8,8 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
-
-
+using System.Xml.Linq;
 
 namespace carga_y_venta_de_producto
 {
@@ -18,28 +17,37 @@ namespace carga_y_venta_de_producto
         #region Propiedades
         Carga cargadatos = new Carga();
         DataTable Stock = new DataTable();
-        SaveFileDialog Guardar = new SaveFileDialog();
-        private frmStock stockPanel;
+        frmMain DGVcarga = new frmMain();
         int posicion;
-        public string resultado;
-        private int i;
+        public frmStock stockPanel;
+
+        public string URL;
+        
+        
+        public string link;
         #endregion
 
         #region Constructor
         public frmStock()
         {
             InitializeComponent();
+            btCargarStock.Enabled = false;
+            btGuardar.Enabled = false;
         }
 
         public frmStock(frmStock stockPanel)
         {
             this.stockPanel = stockPanel;
         }
+        
         #endregion
-
+        
         #region Eventos
         private void btNuevo_Click(object sender, EventArgs e)
         {
+            Stock.Rows.Clear();
+            btCargarStock.Enabled = true;
+            btGuardar.Enabled = true;
             LimpiarControles();
             if (DGV.DataSource != Stock)
             {
@@ -54,44 +62,40 @@ namespace carga_y_venta_de_producto
                 Stock.Columns.Add("Ganancia total", typeof(decimal));
                 DGV.DataSource = Stock;
                 btNuevo.Enabled = false;
+                
 
-                
-                
             }
+            //if (cargar.FileName != "")
+            //{
+            //    Stock.ReadXml(@"lista.xml");
+            //}
+            
             btNuevo.Enabled = false;
         }
 
         private void btGuardar_Click(object sender, EventArgs e)
         {
-            if (Guardar.ShowDialog() == DialogResult.OK)
-            {
-                
-                resultado = System.Convert.ToString(Guardar.FileName);
-                Stock.WriteXml(resultado);
-                btNuevo.Enabled = true;
-            }
+            
+            Stock.WriteXml(@"lista.xml");
+            
+            btNuevo.Enabled = true;
+
+            
         }
 
         private void btCargarStock_Click(object sender, EventArgs e)
         {
-
-            OpenFileDialog cargar = new OpenFileDialog();
-
-            //Process.Start()
-
-
-            if (cargar.ShowDialog() == DialogResult.OK)
-            {
-
-                Stock.ReadXml(cargar.FileName);
-                DGV.DataSource = Stock;
-            }
-
-
+            Stock.Rows.Clear();
+            Stock.ReadXml(@"lista.xml");
+            //if (cargar.ShowDialog() == DialogResult.OK)
+            //{
+            //    Stock.ReadXml(cargar.FileName);
+            //    DGV.DataSource = Stock;
+            //}
         }
         private void btCargaproducto_Click(object sender, EventArgs e)
         {
-
+            
 
             if (txtCantidad.Text == "" || txtPCompra.Text == "")
             {
@@ -99,9 +103,11 @@ namespace carga_y_venta_de_producto
             }
             else
             {
-
+                string preciodecompra;
                 cargadatos.Cantidad = System.Convert.ToDecimal(txtCantidad.Text);
                 cargadatos.PrecCompra = System.Convert.ToDecimal(txtPCompra.Text);
+               
+               
                 Ganancia();
                 cargadatos.GananciaStock();
 
@@ -116,7 +122,7 @@ namespace carga_y_venta_de_producto
                 Stock.Rows[Stock.Rows.Count - 1]["Ganancia total"] = cargadatos.Ganancia;
                 LimpiarControles();
             }
-
+            GuardadoAutomatico();
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -127,26 +133,27 @@ namespace carga_y_venta_de_producto
             else
             {
                 DGV.Rows.Remove(DGV.CurrentRow);
+                GuardadoAutomatico();
             }
 
         }
         private void button2_Click(object sender, EventArgs e)
         {
             this.Close();
-            //paStock.Visible = false;
+           
         }
         private void DGV_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-           
-                posicion = DGV.CurrentRow.Index;
-                txtProducto.Text = DGV["Producto", posicion].Value.ToString();
-                txtID.Text = DGV["ID", posicion].Value.ToString();
-                txtCantidad.Text = DGV["Cantidad", posicion].Value.ToString();
-                txtPCompra.Text = DGV["Precio de compra", posicion].Value.ToString();
-                txtPVenta.Text = DGV["Porcentaje de ganancia", posicion].Value.ToString();
-                btCargaproducto.Enabled = false;
-                btModificar.Enabled = true;
-                        
+
+            posicion = DGV.CurrentRow.Index;
+            txtProducto.Text = DGV["Producto", posicion].Value.ToString();
+            txtID.Text = DGV["ID", posicion].Value.ToString();
+            txtCantidad.Text = DGV["Cantidad", posicion].Value.ToString();
+            txtPCompra.Text = DGV["Precio de compra", posicion].Value.ToString();
+            txtPVenta.Text = DGV["Porcentaje de ganancia", posicion].Value.ToString();
+            btCargaproducto.Enabled = false;
+            btModificar.Enabled = true;
+
 
         }
         private void btModificar_Click(object sender, EventArgs e)
@@ -157,6 +164,7 @@ namespace carga_y_venta_de_producto
             }
             else
             {
+               
                 cargadatos.Cantidad = System.Convert.ToDecimal(txtCantidad.Text);
                 cargadatos.PrecCompra = System.Convert.ToDecimal(txtPCompra.Text);
                 Ganancia();
@@ -173,13 +181,46 @@ namespace carga_y_venta_de_producto
                 LimpiarControles();
                 btCargaproducto.Enabled = true;
                 btModificar.Enabled = false;
+                GuardadoAutomatico();
             }
+            
+        }
+        private void txtCantidad_KeyPress_1(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+
+
+        }
+        //Control para que el textbox no acepte letras
+        private void txtPCompra_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ','))
+            {
+                e.Handled = true;
+            }
+
+            //if ((e.KeyChar == ',') && ((sender as TextBox).Text.IndexOf(',') > -1))
+            //{
+            //    e.Handled = true;
+            //}
 
         }
         #endregion
 
         #region Metodos
+       
+        private void GuardadoAutomatico()
+        {
+            if (cargadatos.URL != null)
+            {
+                Stock.WriteXml(@"lista.xml");
+            }
+        }
 
+        
         private void LimpiarControles()
         {
             txtCantidad.Text = "";
@@ -249,7 +290,12 @@ namespace carga_y_venta_de_producto
 
 
 
+
+
+
         #endregion
+
+        
 
         
     }

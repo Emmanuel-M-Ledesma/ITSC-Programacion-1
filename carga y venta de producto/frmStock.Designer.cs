@@ -185,13 +185,13 @@
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.DGV.DefaultCellStyle = dataGridViewCellStyle2;
             this.DGV.EnableHeadersVisualStyles = false;
-            this.DGV.Location = new System.Drawing.Point(16, 237);
+            this.DGV.Location = new System.Drawing.Point(16, 238);
             this.DGV.Name = "DGV";
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.DarkBlue;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(75)))), ((int)(((byte)(115)))));
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle3.ForeColor = System.Drawing.Color.White;
             this.DGV.RowsDefaultCellStyle = dataGridViewCellStyle3;
-            this.DGV.Size = new System.Drawing.Size(728, 231);
+            this.DGV.Size = new System.Drawing.Size(728, 230);
             this.DGV.TabIndex = 8;
             this.DGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellClick);
             // 
@@ -299,6 +299,7 @@
             this.txtPCompra.Name = "txtPCompra";
             this.txtPCompra.Size = new System.Drawing.Size(97, 20);
             this.txtPCompra.TabIndex = 9;
+            this.txtPCompra.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtPCompra_KeyPress);
             // 
             // txtCantidad
             // 
@@ -306,6 +307,7 @@
             this.txtCantidad.Name = "txtCantidad";
             this.txtCantidad.Size = new System.Drawing.Size(97, 20);
             this.txtCantidad.TabIndex = 8;
+            this.txtCantidad.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtCantidad_KeyPress_1);
             // 
             // btCargaproducto
             // 
