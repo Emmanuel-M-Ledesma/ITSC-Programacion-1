@@ -19,7 +19,7 @@ namespace BackEnd
         public decimal Total;
         public decimal Contador;
         public decimal VentaRealizada;
-
+        public decimal Subtotal;
         #endregion
 
         #region Metodos
@@ -45,7 +45,11 @@ namespace BackEnd
             IVA = Total / 100 * 21;
             Bruto = Total - IVA;
         }
-
+        public void ArregloGanancia()
+        {
+            PrecVenta = (PrecCompra * Ganancia / 100) + PrecCompra;
+            Subtotal = PrecVenta * Cantidad;
+        }
         #endregion
 
     }

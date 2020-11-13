@@ -19,7 +19,7 @@ namespace BackEnd
         #endregion
 
         #region Metodos
-
+        //Guarda el vaalor de la ganancia obtenida en un txt con
         public void Guardartxt()
         {
             TextWriter txt = new StreamWriter(@"inicio.txt");
@@ -34,6 +34,7 @@ namespace BackEnd
             TextReader txt2 = new StreamReader(@"inicio.txt");
             residual = txt2.ReadLine();
         }
+        //Metodo para calcular las ventas y que lo refleje en la pantalla principal
         public void ContadorVenta()
         {
             if (residual1 != null && vf2 == false)
@@ -54,7 +55,7 @@ namespace BackEnd
             TextReader txt3 = new StreamReader(@"contador.txt");
             residual1 = txt3.ReadLine();
         }
-        //TODO: Guardartxt, cargartxt, contadorventa, cargarcontador, gananciaobt estan en CARGAR Y GUARDAR
+        //Evento para calcular la ganancia obtenida en la panalla principal
         public void GananciaObt()
         {
             if (residual != null)
@@ -67,7 +68,7 @@ namespace BackEnd
             }
             GananciaObtenida = ((PrecCompra * Ganancia / 100) * Cantidad) + GananciaObtenida;
 
-            //todo: PrecCompra, Ganancia, Cantidad
+            
         }
 
         #endregion

@@ -30,6 +30,7 @@ namespace carga_y_venta_de_producto
             InitializeComponent();
             designmenu();
             btRefresh.Enabled = true;
+            Recargar();
         }
 
         #endregion
@@ -37,12 +38,9 @@ namespace carga_y_venta_de_producto
         #region Eventos
         private void btRefresh_Click(object sender, EventArgs e)
         {
-            
-            Persistencia.cargartxt();
-            lblGO.Text = "$ " + Persistencia.residual;
-            Persistencia.GananciaObt();
-            Persistencia.CargarContador();
-            lblVR.Text = Persistencia.residual1;
+            Recargar();
+
+
 
         }
         private void btStock_Click(object sender, EventArgs e)
@@ -76,7 +74,14 @@ namespace carga_y_venta_de_producto
         #endregion
 
         #region Metodos
-
+        private void Recargar()
+        {
+            Persistencia.cargartxt();
+            lblGO.Text = "$ " + Persistencia.residual;
+            Persistencia.GananciaObt();
+            Persistencia.CargarContador();
+            lblVR.Text = Persistencia.residual1;
+        }
         private void designmenu()
         {
             paSubmenu.Visible = false;

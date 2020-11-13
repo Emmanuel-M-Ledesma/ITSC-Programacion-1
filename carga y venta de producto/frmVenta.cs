@@ -33,7 +33,7 @@ namespace carga_y_venta_de_producto
         public string URL;
         public decimal resta, resta2;
         decimal TotalPV;
-        public decimal comp1, comp2, comp3, comp4;
+        public decimal comp1, comp2, comp3, comp4, comp5;
         public bool Finalizar, iniciar = false;
         #endregion
 
@@ -97,8 +97,8 @@ namespace carga_y_venta_de_producto
 
             }
             posicion2 = posicion;
-            
 
+            txtCantidad.Text = "";
         }
 
         private void btCargaproducto_Click(object sender, EventArgs e)
@@ -125,7 +125,6 @@ namespace carga_y_venta_de_producto
                     DGVstock["Cantidad", posicion].Value = resta - Sumar.Cantidad;
                     TotalFinal();
                     LimpiarControles();
-                    //todo: cambiar a backend
                     Arreglo();
                     Persistencia.GananciaObt();
                     Persistencia.Guardartxt();
@@ -198,12 +197,19 @@ namespace carga_y_venta_de_producto
         }
         private void btModVenta_Click(object sender, EventArgs e)
         {
+            URL= DGVventa["Total", posicion].Value.ToString();
+            comp5 = System.Convert.ToDecimal(URL);
             Comparar();
-            
+            //todo: agregar cambios para que calcule bien la cantidad por precio final de producto
+            ArregloCellCLick();
+
+            DGVventa["Total", posicion].Value = System.Convert.ToString(Sumar.Subtotal);
+            TotalFinal();
             btCargaproducto.Enabled = true;
             btModVenta.Enabled = false;
             LimpiarControles();
             GuardadoAutomatico();
+
         }
         private void btFinalizar_Click(object sender, EventArgs e)
         {
@@ -238,6 +244,14 @@ namespace carga_y_venta_de_producto
         #endregion
 
         #region Metodos
+        public void ArregloCellCLick()
+        {
+            Sumar.Cantidad = System.Convert.ToDecimal(txtCantidad.Text);
+            Sumar.URL = DGVstock["Precio de compra", posicion].Value.ToString();
+            Sumar.PrecCompra = System.Convert.ToDecimal( Sumar.URL);
+            Ganancia();
+            Sumar.ArregloGanancia();
+        }
         public void GenerarTicket()
         {
             //metodo para crear el ticket de venta y establecer formato del archivo a guardar
@@ -376,14 +390,30 @@ namespace carga_y_venta_de_producto
 
         private void TotalFinal()
         {
-            TotalPV = Sumar.PrecVenta + TotalPV;
+            
+            if (!(btCargaproducto.Enabled == true && btModVenta.Enabled == false))
+            {
+                TotalPV = (TotalPV - comp5) + Sumar.Subtotal;
 
-            txtTotalVenta.Text = System.Convert.ToString(TotalPV);
-            System.Convert.ToDecimal(TotalPV);
-            Sumar.Total = TotalPV;
-            Sumar.IvaBruto();
-            txtBruto.Text = System.Convert.ToString(Sumar.Bruto);
-            txtIva.Text = System.Convert.ToString(Sumar.IVA);
+                txtTotalVenta.Text = System.Convert.ToString(TotalPV);
+                System.Convert.ToDecimal(TotalPV);
+                Sumar.Total = TotalPV;
+                Sumar.IvaBruto();
+                txtBruto.Text = System.Convert.ToString(Sumar.Bruto);
+                txtIva.Text = System.Convert.ToString(Sumar.IVA);
+            }
+            else
+            {
+                TotalPV = Sumar.PrecVenta + TotalPV;
+
+                txtTotalVenta.Text = System.Convert.ToString(TotalPV);
+                System.Convert.ToDecimal(TotalPV);
+                Sumar.Total = TotalPV;
+                Sumar.IvaBruto();
+                txtBruto.Text = System.Convert.ToString(Sumar.Bruto);
+                txtIva.Text = System.Convert.ToString(Sumar.IVA);
+            }
+            
 
         }
 

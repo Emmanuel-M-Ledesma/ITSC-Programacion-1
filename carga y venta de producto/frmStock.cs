@@ -217,10 +217,9 @@ namespace carga_y_venta_de_producto
        
         private void GuardadoAutomatico()
         {
-            if (Sumar.URL != null)
-            {
-                Stock.WriteXml(@"lista.xml");
-            }
+            
+            Stock.WriteXml(@"lista.xml");
+            
         }
 
         
